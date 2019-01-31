@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>jQueryの練習</title>
+		<style>
+.fire{
+	background: red;
+	color: orange;
+}
+		</style>
+	</head>
+	<body>
+		<section class="sec01">
+			<h1>jQueryの練習</h1>
+			<p>jQueryは基本的に以下のように記述する</p>
+<pre>
+$(function(){
+  $("セレクタ").メソッド();
+});
+</pre>
+
+			<h2>セレクタ</h2>
+			<p>
+				セレクタにはhtmlのdom要素、クラスやIDが入る。<br>
+				クラスやIDはCSS同様、.や#を先頭に付け指定。<br>
+				その他、&gt;で直下、空白でそれ以下、,で複数、+で隣接など、<br>
+				CSSのセレクタと同一の指定ができる。
+			</p>
+			<p>
+			例えば、ul以下のli(class="hoge01")に対して赤を指定する場合、
+			</p>
+			<pre>
+$("ul li.hoge01").css('color', 'red');
+			</pre>
+			<p>
+			と指定できる。<br>
+			上記のようにドットでメソッドをつなぐ書式を、<b>チェインメソッド</b>という。
+			</p>
+			<ul>ul
+				<li class="hoge01">
+					li(classはhoge01)
+				</li>
+			</ul>
+
+			<h2>フィルタ</h2>
+			<p>
+				フィルタはセレクタと一緒に使い、「幾つ目」といった指定ができる
+			</p>
+			<pre>
+$(function(){
+  // :eq() equal 最初の要素から幾つめ。0始まり。
+  // :gt(), :ld() greater,less than 以上、以下
+  // :even, :odd 偶数奇数
+  // :contains() 要素内に('指定内容')があるもの
+  // 例
+  $('li:contains('綾鷹')).css('color','red');
+});
+			</pre>
+			<ul>選ばれたのは
+				<li>はらこめし</li>
+				<li>峠の釜めし</li>
+				<li>ますのすし</li>
+				<li>赤福</li>
+				<li>綾鷹</li>
+			</ul>
+
+			<h2>メソッドでのDOM指定</h2>
+			<p>
+				セレクタに続き、各種メソッドでDOMを指定することも可能。
+			</p>
+			<pre>
+// parent(), children() 親、子要素を指定
+// next(), prev() 一つ前後の要素を指定
+// siblings() 兄弟要素(セレクタで指定した要素を除く)
+// 例
+$(".jimin li:contains('安倍')").siblings().css('color','red');
+			</pre>
+			<ul>
+				<li class="jimin">自民
+					<ul>
+						<li>安倍</li>
+						<li>石破</li>
+						<li>小泉</li>
+					</ul>
+				</li>
+				<li class="ricken">立憲民主
+					<ul>
+						<li>枝野</li>
+						<li>辻元</li>
+						<li>菅</li>
+					</ul>
+				</li>
+			</ul>
+
+			<h2>属性セレクタ</h2>
+			<p>特定のセレクタを指定することも可能。</p>
+			<pre>
+// 弊社以外 != を指定
+$('a[href!="http://grofield.jp"]').css('background','red');
+// = そのものを指定
+// != 以外を指定
+// *= 含むものを指定
+// ^= から始まるものを指定
+// $= で終わるものを指定
+			</pre>
+			<div class="attrWithout">
+				<li><a href="http://google.com">google</a></li>
+				<li><a href="http://yahoo.co.jp">yahoo</a></li>
+				<li><a href="http://grofield.jp">grofield</a></li>
+			</div>
+
+			<h2>css,add/removeClass</h2>
+			<p>
+			各メソッドの使い方。<br>
+			css()は値を指定しなければ、プロパティの取得に使用できる。<br>
+			add, removeClassでクラス名を追加できる
+			</p>
+			<pre>
+$('.fire').css('backbround');
+// 上記をconsole.log()などに渡せば取得できる
+$('p.text01').addClass('fire');
+			</pre>
+			<p class="text01">FIRE</p>
+
+			<h2>attrとdata</h2>
+			<p>attr()を使うことで属性の取得と追加、</p>
+			<pre>
+$('a:contains(grofield)').attr('href');
+// http://grofield.jp/
+// 第二引数をとれば、値の追加になる。
+$('p').data('yuubintype');
+// 以下のhtml例のように、data-以下の属性を扱える
+[HTML]
+&lt;p data-yuubintype="nenga"&gt;happy 2019&lt;/p&gt;
+&lt;!-- jqueryで取れるのはnenga --&gt;
+			</pre>
+			<h2>要素の中身を書き換える</h2>
+			<p>
+				text()メソッドで要素の内容を変更できる。<br>
+				html()メソッドでhtmlタグを直書きできる。<br>
+				val()でvalue属性の書き換え、<br>
+				empty(), remove()でそれぞれ中身の消去、タグ自体の消去になる
+			</p>
+			<pre>
+$('input.input01').val('valueやで');
+			</pre>
+			<input type="text" value="" class="input01">
+
+			<h2>要素の追加</h2>
+			<p>
+				before(), after() セレクタの前、後に追加する<br>
+				prepend(), append() セレクタの最初、最後に追加する
+			</p>
+			<pre>
+// 追加したい要素の定義
+var li = $('&lt;li&gt;').text('just do it');
+// 1の前に追加
+$('.listAddBefore &gt; li:eq(1)').before(li);
+			</pre>
+			<ul class="listAddBefore">ul class="listAddBefore"
+				<li>0</li>
+				<li>1</li>
+				<li>2</li>
+			</ul>
+
+			<h2>エフェクト</h2>
+			<p>
+			要素操作でエフェクトをつけることができる<br>
+			表示・非表示にはhide(), show()を用いる事ができる。<br>
+			fadeOut(), fadeIn()で第一引数に応じた速さでフェードする<br>
+			toggle() 表示非表示にあわせ、トグルする【jQueryのバージョンにより挙動が異なる】
+			</p>
+			<pre>
+$('#fadeoutBox').fadeOut(1500);
+			</pre>
+			<div id="fadeoutBox" style="width:100px;height:100px;background:red;"></div>
+			<p>更新して確認。</p>
+
+			<h2>イベントを使う</h2>
+			<p>
+			扱えるイベントは、主にclick()やmouse関係がある。<br>
+			mouseは、mouseover(), mouseout(), mousemove()がある。<br>
+			mousemove()は動いている際に下記のように数値を取得できる。<br>
+			下記例では、マウスオーバーで色がピンクに変わり、イベントeのpageXを取得している。
+			</p>
+			<pre>
+$('#mouseBox') // チェーンしたメソッドは縦に分けることができる
+  .mouseover(function(){
+    $(this).css('background', 'pink'); // 引数内では#mouseBoxはthisで指定する
+  })
+   .mouseout(function(){
+     $(this).css('background', 'red');
+   })
+   .mousemove(function(e){
+     $(this).text(e.pageX);
+   });
+			</pre>
+			<div id="mouseBox" style="height:100px;width:100px;background:red"></div>
+
+			<h2>フォーム部品に関するもの</h2>
+			<div class="formParts">
+				<p>
+				フォームで使用することの多いものとして、forcus(),blur()がある<br>
+				forcus()はinputなどにフォーカスがあたった際の挙動、<br>
+				blur()ではフォーカスが外れた際の挙動を定義できる。<br>
+				また、change()では変更があった際の挙動が定義できる
+				下記例ではinputにfocusでyellowに、selectの変更でアラートがでる
+				</p>
+<pre>
+$('#nameForm')
+  .focus(function(){
+    $(this).css('background', 'yellow');
+  })
+  .blur(function(){
+    $(this).css('background', 'white');
+  });
+$('#optionForm').change(function(){
+  alert('変更がありました');
+});
+</pre>
+			<input id="nameForm" type="text" placeholder="focusとblur">
+			<select id="optionForm" name="optionForm">
+				<option name="optionForm" value="1">1</option>
+				<option name="optionForm" value="2">2</option>
+				<option name="optionForm" value="3">3</option>
+			</select>
+			</div>
+
+			<h2>動的に生成する</h2>
+			<p>
+			jQueryを用いれば要素を動的に生成する事ができる。<br>
+			ただし、並べたところでjQueryは一度のみしか読まないため、<br>
+			生成後のセレクタには対応しない。<br>
+			このため、onメソッドを使い、動的部分も対応する。
+			</p>
+			<pre>
+$('.fueru button').click(function(){
+  // ボタンクリックでpタグが増える
+  var p = $('&lt;p&gt;').text('わかめ').addClass('wakame');
+  $(this).before(p);
+});
+$('body').on('click', '.wakame', function(){
+  $(this).remove();
+  // on()を使わずにclickのみだと更新されず、消せない
+});
+			</pre>
+			<div class="fueru">
+				<button>ふえる</button>
+
+			</div>
+		</section><!--sec01-->
+
+		<section class="sec02">
+			<h1>Ajaxと非同期通信について</h1>
+			<h2>Ajaxとは</h2>
+			<p>
+			Asynchronous JAvascript + XMLの文字を取ったもの。<br>
+			動的ページでページ全体を読み込むのではなく、<br>
+			一部をXMLやJSONで読み込むことで、UXを改善する。<br>
+			おそらく、Google MapsでAjaxが一気に有名になったように思う<br>
+			</p>
+			<h2>load(), post(), get()</h2> 
+			<p>
+			UX向上のため、必要最低限の情報のみだしておき、「もっと読む」などで追加で読み込むという場合、<br>
+			load()やpost(),get()を用いた非同期処理を行うことができる。
+			</p>
+			<pre>
+$('.moreRead button').click(function(){
+  $('#moreReadResult').load('more.html', function(){
+    $('#moreMessage').css('color', 'red');
+  });
+});
+			</pre>
+			<p>
+			また、この書き方は、ロード後に処理を行うコールバック関数を、<br>
+			loadメソッドの第二引数に指定している。<br>
+			これによって、cssが同期的にあたり、表示される。
+			</p>
+			<div class="moreRead">
+				<button>呼び出す</button>
+				<div id="moreReadResult">
+				</div>
+			</div>
+			<p>
+			POSTやGETを非同期で使用する事もできる。<br>
+			postとgetはそれぞれ、<br>
+			$.get('処理を渡すファイルパス', {パラメータ}, コールバック関数);<br>
+			で表す。
+			下記例は、greet.phpにgetで値を渡し、挨拶と現在時間がJSONで返ってくるというものである
+			</p>
+			<pre>
+[greet.php]
+&lt;?php 
+// 配列に入れ、JSON形式で読み出せるように
+$rs = array(
+  "message" =&gt; echo htmlspecialchars("こんにちは, ".$_GET['name'], ENT_QUOTES, "utf-8");
+  "time" =&gt; date("H:i:s");
+);
+
+header('Content-Type: application/json; charset=utf-8');
+echo json_encode($rs); // 戻り値としてJSONの形で$rsの配列を返す
+
+[index.html]
+$('#greet').click(function(){
+  $.get('greet.php', { // getはセレクタをとらないが、ドットはつける
+    name: $('#name').val()
+  }, function(data){
+    $('#result').html(data.message + '(' + data.time + ')');
+  });
+});
+			</pre>
+			<p>
+				<input type="text" name="name" id="name">
+				<input type="button" id="greet" value="挨拶するのだポッター。">
+			</p>
+			<div id="result"></div>
+		</section><!--sec02-->
+
+		<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+		<script>
+			$(function(){
+				$("ul li.hoge01").css('color', 'red');
+				$("li:contains('綾鷹')").css('color','red');
+				$(".jimin li:contains('安倍')").siblings().css('color','red');
+				$('.attrWithout a[href!="http://grofield.jp"]').css('background','red');
+				$('p.text01').addClass('fire');
+				$('input.input01').val('valueやで');
+
+				var li = $('<li>').text('just do it');
+				$('.listAddBefore > li:eq(1)').before(li);
+				$('#fadeoutBox').fadeOut(1500);
+				$('#mouseBox') // チェーンしたメソッドは縦に分けることができる
+					.mouseover(function(){
+						$(this).css('background', 'pink');
+					})
+					.mouseout(function(){
+						$(this).css('background', 'red');
+					})
+					.mousemove(function(e){
+						$(this).text(e.pageX);
+					});
+				$('#nameForm')
+					.focus(function(){
+						$(this).css('background', 'yellow');
+					})
+					.blur(function(){
+						$(this).css('background', 'white');
+					});
+				$('#optionForm').change(function(){
+					alert('変更がありました');
+				});
+
+				$('.fueru button').click(function(){
+					var p = $('<p>').text('わかめ').addClass('wakame');
+				  $(this).before(p);
+				});
+				$('body').on('click', '.wakame', function(){
+				  $(this).remove();
+				});
+
+				$('.moreRead button').click(function(){
+					$('#moreReadResult').load('more.html', function(){
+						$('#moreMessage').css('color', 'red');
+					});
+				});
+
+				$('#greet').click(function(){
+					$.get('greet.php', {
+						name: $('#name').val()
+					}, function(data){
+						$('#result').html(data.message + '(' + data.time + ')');
+					});
+				});
+			});
+		</script>
+	</body>
+</html>
